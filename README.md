@@ -13,7 +13,7 @@ A Python 3.11 project that connects to a local SQL Server instance running in Do
 
 ## Prerequisites
 
-- Python 3.11+
+- Python 3.13+ (tested with Python 3.13.5)
 - Docker Desktop
 - Microsoft ODBC Driver 18 for SQL Server (for macOS)
 
@@ -22,7 +22,6 @@ A Python 3.11 project that connects to a local SQL Server instance running in Do
 ```bash
 # Using Homebrew
 brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
-brew update
 brew install msodbcsql18 mssql-tools18
 
 # Or download directly from Microsoft
@@ -38,7 +37,7 @@ git clone <repository-url>
 cd hydrate-sql-server
 
 # Create virtual environment
-python3.11 -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
@@ -283,6 +282,11 @@ docker-compose logs     # View logs
    SQL_PORT=1434
    ```
 
+4. **SQLAlchemy Timeout Issues**:
+   - The project uses pyodbc for reliable connections
+   - SQLAlchemy may timeout on initial connection (known issue)
+   - All functionality works with pyodbc connection method
+
 ### M3 Mac Specific Issues
 
 The project is configured to handle ARM64 architecture:
@@ -290,6 +294,7 @@ The project is configured to handle ARM64 architecture:
 - Uses `--platform linux/amd64` for SQL Server container
 - ODBC driver compatibility is handled automatically
 - Architecture mismatch warnings are safely ignored
+- **Tested and working on M3 Mac with Python 3.13.5**
 
 ### Performance Tips
 
@@ -339,6 +344,20 @@ This project is designed to expand into a data ingestion pipeline:
 - **Monitoring**: Add metrics and alerting for database operations
 - **API Layer**: Create REST API for data access
 - **Multi-Database Support**: Extend to support other database systems
+
+## Testing Status
+
+✅ **Fully Tested and Working:**
+- Python 3.13.5 on M3 Mac
+- SQL Server 2022 Docker container
+- pyodbc connections (primary method)
+- CSV data loading with bulk insert
+- Container management scripts
+- Schema initialization and data verification
+
+⚠️ **Known Issues:**
+- SQLAlchemy connections may timeout (pyodbc works perfectly)
+- pandas deprecation warning about pyarrow (doesn't affect functionality)
 
 ## License
 
